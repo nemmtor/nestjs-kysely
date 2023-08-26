@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from './app';
 import { ConfigService } from './config';
 
 async function bootstrap() {
@@ -7,8 +7,6 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   const port = configService.get('port');
-
-  console.log('port: ', port);
 
   await app.listen(port);
 }
