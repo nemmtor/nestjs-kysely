@@ -10,14 +10,13 @@ import { HealthModule } from 'src/health';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        // TODO: register as namespace so I can access "database.host" instead of whole obj
-        const dbConfig = configService.get('database');
+        const databaseConfig = configService.get('database');
         return {
-          host: dbConfig.host,
-          port: dbConfig.port,
-          database: dbConfig.name,
-          user: dbConfig.user,
-          password: dbConfig.password,
+          host: databaseConfig.host,
+          port: databaseConfig.port,
+          database: databaseConfig.name,
+          user: databaseConfig.user,
+          password: databaseConfig.password,
         };
       },
     }),
