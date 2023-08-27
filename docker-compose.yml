@@ -1,22 +1,22 @@
 version: '3'
 services:
-  postgres:
-    container_name: nestjs-kysely-postgres
+  database:
+    container_name: nestjs-kysely-database
     image: postgres
     ports:
       - '5433:5432'
     networks:
-      - postgres
+      - database
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
 
-  pgadmin:
+  database-gui:
     container_name: nestjs-kysely-pgadmin
     image: dpage/pgadmin4
     networks:
-      - postgres
+      - database
     ports:
       - '8080:80'
     environment:
@@ -24,5 +24,5 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=${DB_GUI_PASSWORD}
 
 networks:
-  postgres:
+  database:
     driver: bridge
