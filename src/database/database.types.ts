@@ -5,7 +5,3 @@ export type DatabaseConfig = {
   password: string;
   database: string;
 };
-
-export type Tables = {
-  // TODO: add table interfaces here
-};
