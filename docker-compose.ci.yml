@@ -8,9 +8,10 @@ services:
     networks:
       - database
     environment:
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
+      - PORT=4000
+      - DB_USER=e2e
+      - DB_PASSWORD=e2e
+      - DB_NAME=e2e
       - DB_HOST=tests-nestjs-kysely-database
       - DB_PORT=5432
     depends_on:
@@ -21,16 +22,14 @@ services:
   database:
     container_name: tests-nestjs-kysely-database
     image: postgres
-    ports:
-      - '5433:5432'
     networks:
       - database
     environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=e2e
+      - POSTGRES_PASSWORD=e2e
+      - POSTGRES_DB=e2e
     healthcheck:
-      test: [ 'CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_NAME}' ]
+      test: [ 'CMD-SHELL', 'pg_isready -U e2e' ]
       interval: 10s
       timeout: 5s
       retries: 5

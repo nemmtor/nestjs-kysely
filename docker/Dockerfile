@@ -5,7 +5,7 @@ RUN corepack enable
 WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install
-COPY tsconfig*.json jest-e2e.config.json jest.config.json .env ./
+COPY tsconfig*.json jest-e2e.config.json jest.config.json ./
 COPY src ./src
 CMD ["pnpm", "test:e2e"]
 
