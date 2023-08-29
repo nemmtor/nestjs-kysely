@@ -9,18 +9,19 @@ services:
     networks:
       - database
     environment:
-      - PORT=4000
-      - DB_USER=e2e
-      - DB_PASSWORD=e2e
-      - DB_NAME=e2e
-      - DB_HOST=ci-nestjs-kysely-database
-      - DB_PORT=5432
+      - PORT=${PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+
     depends_on:
       database:
         condition: service_healthy
 
   database:
-    container_name: ci-nestjs-kysely-database
+    container_name: ${DB_HOST}
     image: postgres
     networks:
       - database
@@ -29,7 +30,7 @@ services:
       - POSTGRES_PASSWORD=e2e
       - POSTGRES_DB=e2e
     healthcheck:
-      test: [ 'CMD-SHELL', 'pg_isready -U e2e' ]
+      test: [ 'CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_NAME}' ]
       interval: 10s
       timeout: 5s
       retries: 5
