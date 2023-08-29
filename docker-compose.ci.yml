@@ -1,7 +1,8 @@
 version: '3'
+name: 'nestjs-kysely-ci'
 services:
-  e2e:
-    container_name: tests-nestjs-kysely-app
+  app:
+    container_name: ci-nestjs-kysely-app
     build:
       context: .
       dockerfile: ./docker/Dockerfile
@@ -12,15 +13,14 @@ services:
       - DB_USER=e2e
       - DB_PASSWORD=e2e
       - DB_NAME=e2e
-      - DB_HOST=tests-nestjs-kysely-database
+      - DB_HOST=ci-nestjs-kysely-database
       - DB_PORT=5432
     depends_on:
       database:
         condition: service_healthy
-    command: [ 'pnpm', 'test:e2e' ]
 
   database:
-    container_name: tests-nestjs-kysely-database
+    container_name: ci-nestjs-kysely-database
     image: postgres
     networks:
       - database
@@ -33,6 +33,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
 networks:
   database:
     driver: bridge

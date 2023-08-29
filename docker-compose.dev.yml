@@ -1,0 +1,55 @@
+version: '3'
+name: nestjs-kysely-dev
+services:
+  app:
+    container_name: dev-nestjs-kysely-app
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.dev
+    networks:
+      - database
+    ports:
+      - '4000:${PORT}'
+    environment:
+      - PORT=${PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+  database:
+    container_name: ${DB_HOST}
+    image: postgres
+    networks:
+      - database
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_NAME}' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  database-gui:
+    container_name: dev-nestjs-kysely-pgadmin
+    image: dpage/pgadmin4
+    networks:
+      - database
+    ports:
+      - '8080:80'
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${DB_GUI_USER}
+      - PGADMIN_DEFAULT_PASSWORD=${DB_GUI_PASSWORD}
+
+networks:
+  database:
+    driver: bridge
