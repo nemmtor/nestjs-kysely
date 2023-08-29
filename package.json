@@ -10,6 +10,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "compose:dev": "docker compose -f docker-compose.dev.yml up -d",
+    "compose:down": "docker compose -f docker-compose.dev.yml down --remove-orphans",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -29,9 +30,11 @@
     "@nestjs/swagger": "^7.1.10",
     "@nestjs/terminus": "^10.0.1",
     "kysely": "^0.26.3",
+    "nest-winston": "^1.9.4",
     "pg": "^8.11.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
+    "winston": "^3.10.0",
     "zod": "^3.22.2"
   },
   "devDependencies": {

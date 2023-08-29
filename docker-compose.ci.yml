@@ -1,8 +1,8 @@
 version: '3'
-name: 'nestjs-kysely-ci'
+name: 'nest-kysely-ci'
 services:
   app:
-    container_name: ci-nestjs-kysely-app
+    container_name: ci-nest-kysely-app
     build:
       context: .
       dockerfile: ./docker/Dockerfile
