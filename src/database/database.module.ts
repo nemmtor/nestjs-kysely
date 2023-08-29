@@ -5,11 +5,13 @@ import {
   ConfigurableDatabaseModule,
   DATABASE_OPTIONS,
 } from './database.module-definition';
+import { DatabaseHealthIndicator } from './database.health';
 
 @Global()
 @Module({
-  exports: [Database],
+  exports: [DatabaseHealthIndicator, Database],
   providers: [
+    DatabaseHealthIndicator,
     {
       provide: Database,
       inject: [DATABASE_OPTIONS],

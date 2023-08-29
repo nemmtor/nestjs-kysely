@@ -9,6 +9,7 @@
     "build": "nest build",
     "start": "nest start",
     "start:dev": "nest start --watch",
+    "compose:dev": "docker compose -f docker-compose.dev.yml up -d",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -17,13 +18,16 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./jest-e2e.config.json",
-    "ci:e2e": "docker compose -f docker-compose.ci.yml up --build --exit-code-from e2e && docker compose -f docker-compose.ci.yml down -v --remove-orphans"
+    "ci:e2e": "docker compose -f docker-compose.ci.yml up --build --exit-code-from app && docker compose -f docker-compose.ci.yml down -v --remove-orphans",
+    "circular-deps": "depcruise --config .dependency-cruiser.js src"
   },
   "dependencies": {
     "@nestjs/common": "^10.2.1",
     "@nestjs/config": "^3.0.0",
     "@nestjs/core": "^10.2.1",
     "@nestjs/platform-express": "^10.2.1",
+    "@nestjs/swagger": "^7.1.10",
+    "@nestjs/terminus": "^10.0.1",
     "kysely": "^0.26.3",
     "pg": "^8.11.3",
     "reflect-metadata": "^0.1.13",
@@ -42,6 +46,7 @@
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^6.4.1",
     "@typescript-eslint/parser": "^6.4.1",
+    "dependency-cruiser": "^13.1.5",
     "eslint": "^8.48.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
@@ -54,5 +59,9 @@
     "ts-node": "^10.9.1",
     "tsconfig-paths": "4.2.0",
     "typescript": "^5.2.2"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
   }
 }

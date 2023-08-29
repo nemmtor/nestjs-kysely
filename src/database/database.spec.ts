@@ -1,11 +1,11 @@
-import { ServiceUnavailableException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { Database } from 'src/database';
-import { HealthService } from './health.service';
+import { Database } from './database';
+import { DatabaseHealthIndicator } from './database.health';
+import { HealthCheckError } from '@nestjs/terminus';
 
-describe('health service', () => {
-  let service: HealthService;
+describe('database health indicator', () => {
+  let service: DatabaseHealthIndicator;
   let databaseMock: DeepMocked<Database>;
 
   beforeEach(async () => {
@@ -13,7 +13,7 @@ describe('health service', () => {
 
     const moduleRef = await Test.createTestingModule({
       providers: [
-        HealthService,
+        DatabaseHealthIndicator,
         {
           provide: Database,
           useValue: databaseMock,
@@ -21,20 +21,18 @@ describe('health service', () => {
       ],
     }).compile();
 
-    service = moduleRef.get(HealthService);
+    service = moduleRef.get(DatabaseHealthIndicator);
   });
 
   it('doesnt throw when db is alive', () => {
-    expect(service.healthCheck()).resolves;
+    expect(service.isHealthy()).resolves;
   });
 
-  it('throws ServiceUnavailableException', async () => {
+  it('throws HealthCheckError', async () => {
     databaseMock.executeQuery.mockImplementationOnce(() => {
       throw new Error();
     });
 
-    await expect(service.healthCheck()).rejects.toThrow(
-      ServiceUnavailableException,
-    );
+    await expect(service.isHealthy()).rejects.toThrow(HealthCheckError);
   });
 });

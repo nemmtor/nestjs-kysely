@@ -1,11 +1,20 @@
 name: CI
 
+env:
+  PORT: ${{secrets.PORT}}
+  DB_USER: ${{secrets.DB_USER}}
+  DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+  DB_NAME: ${{secrets.DB_NAME}}
+  DB_HOST: ${{secrets.DB_HOST}}
+  DB_PORT: ${{secrets.DB_PORT}}
+
 on:
   push:
 
 
 jobs:
   install-dependencies:
+    environment: ci
     runs-on: ubuntu-20.04
     strategy:
       matrix:
@@ -24,6 +33,7 @@ jobs:
         run: pnpm install
 
   build:
+    environment: ci
     runs-on: ubuntu-20.04
     needs: install-dependencies
     strategy:
@@ -45,6 +55,7 @@ jobs:
         run: pnpm build
 
   e2e-tests:
+    environment: ci
     runs-on: ubuntu-20.04
     needs: install-dependencies
     steps:
@@ -63,6 +74,7 @@ jobs:
         run: pnpm ci:e2e
 
   unit-tests:
+    environment: ci
     runs-on: ubuntu-20.04
     needs: install-dependencies
     steps:
@@ -79,3 +91,22 @@ jobs:
         run: pnpm install
       - name: Run unit tests
         run: pnpm test
+
+  circular-deps:
+    environment: ci
+    runs-on: ubuntu-20.04
+    needs: install-dependencies
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run circular dependencies check
+        run: pnpm circular-deps
