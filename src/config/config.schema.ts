@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'nestjs-zod/z';
 
 const portSchema = z.preprocess(
   (v) => parseInt(z.string().parse(v), 10),
