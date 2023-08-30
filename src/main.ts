@@ -13,6 +13,8 @@ import { ConfigService } from './config';
 
 patchNestJsSwagger();
 
+console.log('foo')
+
 async function bootstrap() {
   const loggerInstance = winston.createLogger({
     transports: [
