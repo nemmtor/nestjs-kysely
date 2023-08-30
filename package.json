@@ -23,7 +23,8 @@
     "circular-deps": "depcruise --config .dependency-cruiser.js src",
     "prepare": "husky install",
     "lint-staged": "lint-staged",
-    "commitlint": "commitlint --edit"
+    "commitlint": "commitlint",
+    "validate-branch-name": "validate-branch-name"
   },
   "dependencies": {
     "@nestjs/common": "^10.2.1",
@@ -74,7 +75,8 @@
     "ts-loader": "^9.4.4",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "4.2.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "validate-branch-name": "^1.3.0"
   },
   "engines": {
     "node": ">=18",

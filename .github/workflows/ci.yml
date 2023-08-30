@@ -11,101 +11,147 @@ env:
 on:
   pull_request:
 
+
 jobs:
   install-dependencies:
     environment: ci
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18]
+        node-version: [ 18 ]
     steps:
       - uses: actions/checkout@v3
+
       - uses: pnpm/action-setup@v2
         with:
           version: 8
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
+
       - name: Install dependencies
         run: pnpm install
 
   build:
     environment: ci
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: install-dependencies
     strategy:
       matrix:
-        node-version: [18]
+        node-version: [ 18 ]
     steps:
       - uses: actions/checkout@v3
+
       - uses: pnpm/action-setup@v2
         with:
           version: 8
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
+
       - name: Install dependencies
         run: pnpm install
+
       - name: Build project
         run: pnpm build
 
   e2e-tests:
     environment: ci
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: install-dependencies
     steps:
       - uses: actions/checkout@v3
+
       - uses: pnpm/action-setup@v2
         with:
           version: 8
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
+
       - name: Install dependencies
         run: pnpm install
+
       - name: Run e2e tests
         run: pnpm ci:e2e
 
   unit-tests:
     environment: ci
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: install-dependencies
     steps:
       - uses: actions/checkout@v3
+
       - uses: pnpm/action-setup@v2
         with:
           version: 8
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
+
       - name: Install dependencies
         run: pnpm install
+
       - name: Run unit tests
         run: pnpm test
 
   circular-deps:
     environment: ci
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: install-dependencies
     steps:
       - uses: actions/checkout@v3
+
       - uses: pnpm/action-setup@v2
         with:
           version: 8
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
+
       - name: Install dependencies
         run: pnpm install
+
       - name: Run circular dependencies check
         run: pnpm circular-deps
+
+  commitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: wagoid/commitlint-github-action@v5
+
+  validate-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: wagoid/commitlint-github-action@v5
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: validate branch name
+        run: pnpm dlx validate-branch-name -t ${{ github.head_ref }}
