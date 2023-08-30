@@ -11,14 +11,10 @@ env:
 on:
   pull_request:
 
-
 jobs:
   install-dependencies:
     environment: ci
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [ 18 ]
     steps:
       - uses: actions/checkout@v3
 
@@ -26,10 +22,9 @@ jobs:
         with:
           version: 8
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -39,9 +34,6 @@ jobs:
     environment: ci
     runs-on: ubuntu-latest
     needs: install-dependencies
-    strategy:
-      matrix:
-        node-version: [ 18 ]
     steps:
       - uses: actions/checkout@v3
 
@@ -49,10 +41,9 @@ jobs:
         with:
           version: 8
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -72,10 +63,9 @@ jobs:
         with:
           version: 8
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -95,10 +85,9 @@ jobs:
         with:
           version: 8
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -106,6 +95,28 @@ jobs:
 
       - name: Run unit tests
         run: pnpm test
+
+  lint:
+    environment: ci
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run lint
+        run: pnpm lint
 
   circular-deps:
     environment: ci
@@ -118,10 +129,9 @@ jobs:
         with:
           version: 8
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -140,18 +150,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: wagoid/commitlint-github-action@v5
-      - uses: actions/checkout@v3
 
       - uses: pnpm/action-setup@v2
         with:
           version: 8
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
 
       - name: validate branch name
         run: pnpm dlx validate-branch-name -t ${{ github.head_ref }}
