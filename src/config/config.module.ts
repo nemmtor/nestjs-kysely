@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule as NestConfigModule } from '@nestjs/config';
 
 import { ConfigService } from './config.service';
-import { loadEnv } from './config.utils';
+import { loadEnvironment } from './config.utils';
 
 @Module({
   imports: [
     NestConfigModule.forRoot({
-      load: [loadEnv],
+      load: [loadEnvironment],
       cache: true,
     }),
   ],

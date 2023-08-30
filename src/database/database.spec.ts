@@ -12,7 +12,7 @@ describe('database health indicator', () => {
   beforeEach(async () => {
     databaseMock = createMock<Database>();
 
-    const moduleRef = await Test.createTestingModule({
+    const moduleReference = await Test.createTestingModule({
       providers: [
         DatabaseHealthIndicator,
         {
@@ -22,7 +22,7 @@ describe('database health indicator', () => {
       ],
     }).compile();
 
-    service = moduleRef.get(DatabaseHealthIndicator);
+    service = moduleReference.get(DatabaseHealthIndicator);
   });
 
   it('doesnt throw when db is alive', () => {
@@ -31,7 +31,7 @@ describe('database health indicator', () => {
 
   it('throws HealthCheckError', async () => {
     databaseMock.executeQuery.mockImplementationOnce(() => {
-      throw new Error();
+      throw new Error('Something wrong');
     });
 
     await expect(service.isHealthy()).rejects.toThrow(HealthCheckError);

@@ -1,7 +1,7 @@
 import { z } from 'nestjs-zod/z';
 
 const portSchema = z.preprocess(
-  (v) => parseInt(z.string().parse(v), 10),
+  (v) => Number.parseInt(z.string().parse(v), 10),
   z.number().positive(),
 );
 
@@ -14,13 +14,13 @@ export const configSchema = z
     DB_PASSWORD: z.string(),
     DB_NAME: z.string(),
   })
-  .transform((env) => ({
-    port: env.PORT,
+  .transform((environment) => ({
+    port: environment.PORT,
     database: {
-      host: env.DB_HOST,
-      port: env.DB_PORT,
-      user: env.DB_USER,
-      password: env.DB_PASSWORD,
-      name: env.DB_NAME,
+      host: environment.DB_HOST,
+      port: environment.DB_PORT,
+      user: environment.DB_USER,
+      password: environment.DB_PASSWORD,
+      name: environment.DB_NAME,
     },
   }));
