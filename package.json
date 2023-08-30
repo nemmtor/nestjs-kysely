@@ -22,7 +22,8 @@
     "ci:e2e": "docker compose -f docker-compose.ci.yml up --build --exit-code-from app && docker compose -f docker-compose.ci.yml down -v --remove-orphans",
     "circular-deps": "depcruise --config .dependency-cruiser.js src",
     "prepare": "husky install",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "commitlint": "commitlint --edit"
   },
   "dependencies": {
     "@nestjs/common": "^10.2.1",
@@ -41,6 +42,8 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.7.1",
+    "@commitlint/config-conventional": "^17.7.0",
     "@golevelup/ts-jest": "^0.4.0",
     "@nestjs/cli": "^10.1.16",
     "@nestjs/schematics": "^10.0.2",
