@@ -1,4 +1,5 @@
 import { Global, Module } from '@nestjs/common';
+
 import { Database } from './database';
 import { databaseFactory } from './database.factory';
 import {

@@ -1,8 +1,9 @@
 import { Test } from '@nestjs/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { Database } from './database';
-import { DatabaseHealthIndicator } from './database.health';
 import { HealthCheckError } from '@nestjs/terminus';
+
+import { DatabaseHealthIndicator } from './database.health';
+import { Database } from './database';
 
 describe('database health indicator', () => {
   let service: DatabaseHealthIndicator;
@@ -25,7 +26,7 @@ describe('database health indicator', () => {
   });
 
   it('doesnt throw when db is alive', () => {
-    expect(service.isHealthy()).resolves;
+    return expect(service.isHealthy()).resolves.toBeDefined();
   });
 
   it('throws HealthCheckError', async () => {

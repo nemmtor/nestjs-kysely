@@ -1,13 +1,17 @@
 import { VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app';
-import { ConfigService } from './config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as winston from 'winston';
 import {
   WinstonModule,
   utilities as nestWinstonModuleUtilities,
 } from 'nest-winston';
+import { patchNestJsSwagger } from 'nestjs-zod';
+
+import { AppModule } from './app';
+import { ConfigService } from './config';
+
+patchNestJsSwagger();
 
 async function bootstrap() {
   const loggerInstance = winston.createLogger({

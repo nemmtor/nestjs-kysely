@@ -5,6 +5,7 @@ import {
   HealthCheckError,
 } from '@nestjs/terminus';
 import { sql } from 'kysely';
+
 import { Database } from './database';
 
 const STATUS_KEY = 'database';

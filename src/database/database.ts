@@ -1,3 +1,3 @@
 import { Kysely } from 'kysely';
 
-export class Database extends Kysely<any> {}
+export class Database extends Kysely<unknown> {}

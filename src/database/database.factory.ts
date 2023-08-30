@@ -1,5 +1,6 @@
 import { PostgresDialect } from 'kysely';
 import { Pool } from 'pg';
+
 import { Database } from './database';
 import { DatabaseConfig } from './database.types';
 

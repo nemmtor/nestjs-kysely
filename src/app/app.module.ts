@@ -1,8 +1,8 @@
 import { Logger, Module } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
 import { ZodValidationPipe } from 'nestjs-zod';
-import { ConfigModule } from 'src/config/config.module';
-import { ConfigService } from 'src/config/config.service';
+
+import { ConfigModule, ConfigService } from 'src/config';
 import { DatabaseModule } from 'src/database';
 import { HealthModule } from 'src/health';
 
