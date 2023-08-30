@@ -9,6 +9,7 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:unicorn/recommended',
     'plugin:jest/recommended',
     'plugin:import/recommended',
     'plugin:jest-formatting/recommended',
@@ -31,10 +32,13 @@ module.exports = {
     },
   },
   rules: {
-    // '@typescript-eslint/interface-name-prefix': 'off',
-    // '@typescript-eslint/explicit-function-return-type': 'off',
-    // '@typescript-eslint/explicit-module-boundary-types': 'off',
-    // '@typescript-eslint/no-explicit-any': 'off',
+    'unicorn/prevent-abbreviations': [
+      'error',
+      {
+        ignore: ['\\.e2e-spec$', /^ignore/i],
+      },
+    ],
+    'unicorn/prefer-top-level-await': 'off',
     'prettier/prettier': 'error',
     'import/order': [
       'error',
