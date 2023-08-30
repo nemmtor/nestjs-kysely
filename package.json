@@ -20,7 +20,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./jest-e2e.config.json",
     "ci:e2e": "docker compose -f docker-compose.ci.yml up --build --exit-code-from app && docker compose -f docker-compose.ci.yml down -v --remove-orphans",
-    "circular-deps": "depcruise --config .dependency-cruiser.js src"
+    "circular-deps": "depcruise --config .dependency-cruiser.js src",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@nestjs/common": "^10.2.1",
@@ -59,6 +60,7 @@
     "eslint-plugin-jest-formatting": "^3.1.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-unicorn": "^48.0.1",
+    "husky": "^8.0.3",
     "jest": "29.6.4",
     "prettier": "^3.0.2",
     "source-map-support": "^0.5.21",
