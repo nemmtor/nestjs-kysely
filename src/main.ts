@@ -7,6 +7,7 @@ import {
   utilities as nestWinstonModuleUtilities,
 } from 'nest-winston';
 import { patchNestJsSwagger } from 'nestjs-zod';
+import helmet from 'helmet';
 
 import { AppModule } from './app';
 import { ConfigService } from './config';
@@ -39,7 +40,10 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule, {
     logger: WinstonModule.createLogger(loggerInstance),
+    cors: true,
   });
+
+  app.use(helmet());
 
   const configService = app.get(ConfigService);
   const port = configService.get('application').port;
