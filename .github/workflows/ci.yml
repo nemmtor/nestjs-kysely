@@ -1,6 +1,7 @@
 name: CI
 
 env:
+  NODE_ENV: ${{secrets.NODE_ENV}}
   PORT: ${{secrets.PORT}}
   DB_USER: ${{secrets.DB_USER}}
   DB_PASSWORD: ${{secrets.DB_PASSWORD}}
@@ -10,6 +11,7 @@ env:
 
 on:
   pull_request:
+
 
 jobs:
   install-dependencies:

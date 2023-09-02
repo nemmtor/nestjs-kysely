@@ -11,12 +11,14 @@ services:
     ports:
       - '4000:${PORT}'
     environment:
+      - NODE_ENV=${NODE_ENV}
       - PORT=${PORT}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
+      - SENTRY_DSN=${SENTRY_DSN}
     depends_on:
       database:
         condition: service_healthy
