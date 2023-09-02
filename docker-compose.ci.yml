@@ -9,18 +9,21 @@ services:
     networks:
       - database
     environment:
+      - NODE_ENV=${NODE_ENV}
       - PORT=${PORT}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - DB_HOST=ci-${DB_HOST}
       - DB_PORT=${DB_PORT}
+      - SENTRY_DSN=${SENTRY_DSN}
 
     depends_on:
       database:
         condition: service_healthy
 
   database:
+    # ci- prefix is needed to prevent duplicate container name when running ci compose locally
     container_name: ci-${DB_HOST}
     image: postgres
     networks:

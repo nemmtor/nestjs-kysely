@@ -7,20 +7,28 @@ const portSchema = z.preprocess(
 
 export const configSchema = z
   .object({
+    NODE_ENV: z.union([z.literal('local'), z.literal('test'), z.literal('ci')]),
     PORT: portSchema,
     DB_HOST: z.string(),
     DB_PORT: portSchema,
     DB_USER: z.string(),
     DB_PASSWORD: z.string(),
     DB_NAME: z.string(),
+    SENTRY_DSN: z.string(),
   })
   .transform((environment) => ({
-    port: environment.PORT,
+    application: {
+      environment: environment.NODE_ENV,
+      port: environment.PORT,
+    },
     database: {
       host: environment.DB_HOST,
       port: environment.DB_PORT,
       user: environment.DB_USER,
       password: environment.DB_PASSWORD,
       name: environment.DB_NAME,
+    },
+    sentry: {
+      dsn: environment.SENTRY_DSN,
     },
   }));

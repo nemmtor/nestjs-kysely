@@ -19,7 +19,10 @@ async function bootstrap() {
       new winston.transports.File({
         filename: 'error.log',
         level: 'error',
-        format: winston.format.json(),
+        format: winston.format.combine(
+          winston.format.timestamp(),
+          winston.format.json(),
+        ),
       }),
       new winston.transports.Console({
         format: winston.format.combine(
@@ -39,7 +42,7 @@ async function bootstrap() {
   });
 
   const configService = app.get(ConfigService);
-  const port = configService.get('port');
+  const port = configService.get('application').port;
 
   app.enableVersioning({
     defaultVersion: '1',
