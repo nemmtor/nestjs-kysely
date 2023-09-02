@@ -1,6 +1,7 @@
 import { HttpException, Logger, Module } from '@nestjs/common';
-import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { SentryInterceptor, SentryModule } from '@travelerdev/nestjs-sentry';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ZodValidationPipe } from 'nestjs-zod';
 
 import { ConfigModule, ConfigService } from 'src/config';
@@ -24,6 +25,10 @@ import { HealthModule } from 'src/health';
         };
       },
     }),
+    ThrottlerModule.forRoot({
+      ttl: 30,
+      limit: 10,
+    }),
     SentryModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (cfg: ConfigService) => {
@@ -42,6 +47,10 @@ import { HealthModule } from 'src/health';
   controllers: [],
   providers: [
     Logger,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
     {
       provide: APP_INTERCEPTOR,
       useFactory: () =>
