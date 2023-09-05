@@ -7,9 +7,13 @@ import { ZodValidationPipe } from 'nestjs-zod';
 import { ConfigModule, ConfigService } from 'src/config';
 import { DatabaseModule } from 'src/database';
 import { HealthModule } from 'src/health';
+import { UserModule } from 'src/user';
+import { AuthModule } from 'src/auth';
 
 @Module({
   imports: [
+    AuthModule,
+    UserModule,
     HealthModule,
     DatabaseModule.forRootAsync({
       imports: [ConfigModule],
@@ -26,8 +30,7 @@ import { HealthModule } from 'src/health';
       },
     }),
     ThrottlerModule.forRoot({
-      ttl: 30,
-      limit: 10,
+      throttlers: [{ limit: 10, ttl: 30 }],
     }),
     SentryModule.forRootAsync({
       imports: [ConfigModule],
@@ -44,7 +47,6 @@ import { HealthModule } from 'src/health';
     }),
     ConfigModule,
   ],
-  controllers: [],
   providers: [
     Logger,
     {
