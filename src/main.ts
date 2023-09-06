@@ -1,51 +1,32 @@
 import { VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as winston from 'winston';
-import {
-  WinstonModule,
-  utilities as nestWinstonModuleUtilities,
-} from 'nest-winston';
+import { WinstonModule } from 'nest-winston';
 import { patchNestJsSwagger } from 'nestjs-zod';
 import helmet from 'helmet';
 
 import { AppModule } from './app';
 import { ConfigService } from './config';
+import { Database, DatabaseExceptionFilter, migrateToLatest } from './database';
+import { logger } from './lib';
 
 patchNestJsSwagger();
 
 async function bootstrap() {
-  const loggerInstance = winston.createLogger({
-    transports: [
-      new winston.transports.File({
-        filename: 'error.log',
-        level: 'error',
-        format: winston.format.combine(
-          winston.format.timestamp(),
-          winston.format.json(),
-        ),
-      }),
-      new winston.transports.Console({
-        format: winston.format.combine(
-          winston.format.timestamp(),
-          winston.format.ms(),
-          nestWinstonModuleUtilities.format.nestLike('Nest-Kysely', {
-            colors: true,
-            prettyPrint: true,
-          }),
-        ),
-      }),
-    ],
-  });
-
   const app = await NestFactory.create(AppModule, {
-    logger: WinstonModule.createLogger(loggerInstance),
+    logger: WinstonModule.createLogger(logger),
     cors: true,
   });
 
   app.use(helmet());
 
   const configService = app.get(ConfigService);
+  const database = app.get(Database);
+
+  app.useGlobalFilters(new DatabaseExceptionFilter());
+
+  await migrateToLatest(database);
+
   const port = configService.get('application').port;
 
   app.enableVersioning({

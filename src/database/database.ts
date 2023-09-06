@@ -1,3 +1,5 @@
 import { Kysely } from 'kysely';
 
-export class Database extends Kysely<unknown> {}
+import { Tables } from './database.types';
+
+export class Database extends Kysely<Tables> {}
