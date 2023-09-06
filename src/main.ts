@@ -7,7 +7,7 @@ import helmet from 'helmet';
 
 import { AppModule } from './app';
 import { ConfigService } from './config';
-import { Database, DatabaseExceptionFilter, migrateToLatest } from './database';
+import { DatabaseExceptionFilter } from './database';
 import { logger } from './lib';
 
 patchNestJsSwagger();
@@ -21,11 +21,8 @@ async function bootstrap() {
   app.use(helmet());
 
   const configService = app.get(ConfigService);
-  const database = app.get(Database);
 
   app.useGlobalFilters(new DatabaseExceptionFilter());
-
-  await migrateToLatest(database);
 
   const port = configService.get('application').port;
 

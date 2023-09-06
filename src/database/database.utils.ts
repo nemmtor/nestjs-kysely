@@ -3,9 +3,7 @@ import { promises as fs } from 'node:fs';
 
 import { FileMigrationProvider, Kysely, Migrator } from 'kysely';
 
-import { Tables } from './database.types';
-
-export const migrateToLatest = async (database: Kysely<Tables>) => {
+export const migrateToLatest = async (database: Kysely<unknown>) => {
   const migrator = new Migrator({
     db: database,
     provider: new FileMigrationProvider({

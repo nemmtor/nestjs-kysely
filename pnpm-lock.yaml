@@ -41,6 +41,9 @@ dependencies:
   bcrypt:
     specifier: ^5.1.1
     version: 5.1.1
+  dotenv:
+    specifier: ^16.3.1
+    version: 16.3.1
   helmet:
     specifier: ^7.0.0
     version: 7.0.0

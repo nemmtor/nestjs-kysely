@@ -19,12 +19,12 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./jest-e2e.config.json",
-    "ci:e2e": "docker compose -f docker-compose.ci.yml up --build --exit-code-from app && docker compose -f docker-compose.ci.yml down -v --remove-orphans",
     "circular-deps": "depcruise --config .dependency-cruiser.js src",
     "prepare": "husky install",
     "lint-staged": "lint-staged",
     "commitlint": "commitlint",
-    "validate-branch-name": "validate-branch-name"
+    "validate-branch-name": "validate-branch-name",
+    "migrate:up": "ts-node ./run-migrations.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.2.4",
@@ -39,6 +39,7 @@
     "@travelerdev/nestjs-sentry": "^4.2.1",
     "@types/express": "^4.17.17",
     "bcrypt": "^5.1.1",
+    "dotenv": "^16.3.1",
     "helmet": "^7.0.0",
     "kysely": "^0.26.3",
     "nest-winston": "^1.9.4",

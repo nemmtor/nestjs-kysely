@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { sql } from 'kysely';
 
 import { AppModule } from 'src/app';
-import { Database, migrateToLatest } from 'src/database';
+import { Database } from 'src/database';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -17,8 +17,6 @@ describe('AppController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     database = app.get(Database);
-
-    await migrateToLatest(database);
 
     await app.init();
   });
