@@ -57,24 +57,20 @@ jobs:
   e2e-tests:
     environment: ci
     runs-on: ubuntu-latest
-    needs: install-dependencies
     steps:
       - uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install
-
       - name: Run e2e tests
-        run: pnpm ci:e2e
+        run: docker compose -f docker-compose.ci.yml run --build app && docker compose -f docker-compose.ci.yml down -v --remove-orphans
+
+  migrations:
+    environment: ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run migrations
+        run: docker compose -f docker-compose.ci.yml run --build migrations && docker compose -f docker-compose.ci.yml down -v --remove-orphans
 
   unit-tests:
     environment: ci
