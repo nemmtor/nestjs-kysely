@@ -1,0 +1,8 @@
+version: '3'
+name: nest-kysely-prod
+services:
+  app:
+    user: node
+    build:
+      target: prod
+    command: node dist/main

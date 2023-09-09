@@ -1,0 +1,10 @@
+*
+
+!src/**/*
+!migrations/**/*
+!run-migrations.ts
+!package.json
+!pnpm-lock.yaml
+!tsconfig*.json
+!jest-e2e.config.json
+!jest.config.json
