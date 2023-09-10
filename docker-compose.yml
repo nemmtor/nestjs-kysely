@@ -1,0 +1,65 @@
+version: '3'
+name: nest-kysely
+services:
+  app:
+    container_name: nest-kysely-app
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      target: setup
+    networks:
+      - database
+    ports:
+      - 4000:${PORT}
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - SENTRY_DSN=${SENTRY_DSN}
+    depends_on:
+      database:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+  migrations:
+    container_name: nest-kysely-migrations
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      target: migrations
+    networks:
+      - database
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+    depends_on:
+      database:
+        condition: service_healthy
+    command: ./node_modules/.bin/ts-node ./run-migrations.ts
+  database:
+    container_name: ${DB_HOST}
+    image: postgres
+    networks:
+      - database
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - 5433:5432
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_NAME}' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  database:
+    driver: bridge
