@@ -3,6 +3,7 @@ name: CI
 env:
   NODE_ENV: ${{secrets.NODE_ENV}}
   PORT: ${{secrets.PORT}}
+  ADMIN_TOKEN: ${{secrets.ADMIN_TOKEN}}
   DB_USER: ${{secrets.DB_USER}}
   DB_PASSWORD: ${{secrets.DB_PASSWORD}}
   DB_NAME: ${{secrets.DB_NAME}}

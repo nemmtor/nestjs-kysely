@@ -1,17 +1,24 @@
-import { HttpException, Logger, Module } from '@nestjs/common';
+import {
+  HttpException,
+  Logger,
+  MiddlewareConsumer,
+  Module,
+} from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { SentryInterceptor, SentryModule } from '@travelerdev/nestjs-sentry';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { ZodValidationPipe } from 'nestjs-zod';
+import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod';
 
 import { ConfigModule, ConfigService } from 'src/config';
 import { DatabaseModule } from 'src/database';
 import { HealthModule } from 'src/health';
 import { UserModule } from 'src/user';
 import { AuthModule } from 'src/auth';
+import { KillSwitchMiddleware, KillSwitchModule } from 'src/kill-switch';
 
 @Module({
   imports: [
+    KillSwitchModule,
     AuthModule,
     UserModule,
     HealthModule,
@@ -69,6 +76,14 @@ import { AuthModule } from 'src/auth';
       provide: APP_PIPE,
       useClass: ZodValidationPipe,
     },
+    { provide: APP_INTERCEPTOR, useClass: ZodSerializerInterceptor },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(KillSwitchMiddleware)
+      .exclude(':version/killswitch/:status')
+      .forRoutes('*');
+  }
+}

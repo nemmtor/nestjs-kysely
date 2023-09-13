@@ -7,3 +7,12 @@ const registerSchema = z.object({
 });
 
 export class RegisterDto extends createZodDto(registerSchema) {}
+
+const registerResponseSchema = z.object({
+  id: z.string().uuid(),
+  updated_at: z.date(),
+  created_at: z.date(),
+  email: z.string().email(),
+});
+
+export class RegisterResponseDto extends createZodDto(registerResponseSchema) {}

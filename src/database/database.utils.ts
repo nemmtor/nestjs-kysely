@@ -1,36 +1,19 @@
-import * as path from 'node:path';
-import { promises as fs } from 'node:fs';
+import { sql } from 'kysely';
 
-import { FileMigrationProvider, Kysely, Migrator } from 'kysely';
+import { Database } from './database';
 
-export const migrateToLatest = async (database: Kysely<unknown>) => {
-  const migrator = new Migrator({
-    db: database,
-    provider: new FileMigrationProvider({
-      fs,
-      path,
-      // eslint-disable-next-line unicorn/prefer-module
-      migrationFolder: path.join(__dirname, './migrations'),
-    }),
-  });
+const getAllTables = async (database: Database) => {
+  const { rows } = await sql<{ tablename: string }>`
+    SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema' AND tablename NOT LIKE '%migration%';
+  `.execute(database);
 
-  const { error, results } = await migrator.migrateToLatest();
+  return rows.map((row) => row.tablename);
+};
 
-  if (results)
-    for (const it of results) {
-      if (it.status === 'Success') {
-        console.log(
-          `migration "${it.migrationName}" was executed successfully`,
-        );
-      } else if (it.status === 'Error') {
-        console.error(`failed to execute migration "${it.migrationName}"`);
-      }
-    }
-
-  if (error) {
-    console.error(error);
-    throw new Error('Failed to migrate');
-  }
-
-  // await database.destroy();
+export const truncateAllTables = async (database: Database) => {
+  const allTables = await getAllTables(database);
+  // TODO: verify if this works when having more than 1 table
+  return sql`truncate table ${sql.table(allTables.join(', '))}`.execute(
+    database,
+  );
 };
