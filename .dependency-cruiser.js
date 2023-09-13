@@ -117,7 +117,7 @@ module.exports = {
       from: {},
       to: {
         moreThanOneDependencyType: true,
-        // as it's pretty common to have a type import be a type only import 
+        // as it's pretty common to have a type import be a type only import
         // _and_ (e.g.) a devDependency - don't consider type-only dependency
         // types for this rule
         dependencyTypesNot: ["type-only"]
@@ -125,7 +125,7 @@ module.exports = {
     },
 
     /* rules you might want to tweak for your specific situation: */
-    
+
     {
       name: 'not-to-spec',
       comment:
@@ -149,7 +149,7 @@ module.exports = {
         'from.pathNot re of the not-to-dev-dep rule in the dependency-cruiser configuration',
       from: {
         path: '^(src)',
-        pathNot: '\.(spec|test)\.(js|mjs|cjs|ts|ls|coffee|litcoffee|coffee\.md)$'
+        pathNot: ['\.(spec|test)\.(js|mjs|cjs|ts|ls|coffee|litcoffee|coffee\.md)$', '\.e2e\.ts$']
       },
       to: {
         dependencyTypes: [
@@ -224,7 +224,7 @@ module.exports = {
     // moduleSystems: ['amd', 'cjs', 'es6', 'tsd'],
 
     /* prefix for links in html and svg output (e.g. 'https://github.com/you/yourrepo/blob/develop/'
-       to open it on your online repo or `vscode://file/${process.cwd()}/` to 
+       to open it on your online repo or `vscode://file/${process.cwd()}/` to
        open it in visual studio code),
      */
     // prefix: '',
@@ -234,11 +234,11 @@ module.exports = {
        "specify": for each dependency identify whether it only exists before compilation or also after
      */
     tsPreCompilationDeps: true,
-    
-    /* 
-       list of extensions to scan that aren't javascript or compile-to-javascript. 
+
+    /*
+       list of extensions to scan that aren't javascript or compile-to-javascript.
        Empty by default. Only put extensions in here that you want to take into
-       account that are _not_ parsable. 
+       account that are _not_ parsable.
     */
     // extraExtensionsToScan: [".json", ".jpg", ".png", ".svg", ".webp"],
 
@@ -282,7 +282,7 @@ module.exports = {
     /* Babel config ('.babelrc', '.babelrc.json', '.babelrc.json5', ...) to use
       for compilation (and whatever other naughty things babel plugins do to
       source code). This feature is well tested and usable, but might change
-      behavior a bit over time (e.g. more precise results for used module 
+      behavior a bit over time (e.g. more precise results for used module
       systems) without dependency-cruiser getting a major version bump.
      */
     // babelConfig: {
@@ -309,7 +309,7 @@ module.exports = {
 
          If you have an `exportsFields` attribute in your webpack config, that one
          will have precedence over the one specified here.
-      */ 
+      */
       exportsFields: ["exports"],
       /* List of conditions to check for in the exports field. e.g. use ['imports']
          if you're only interested in exposed es6 modules, ['require'] for commonjs,
@@ -324,14 +324,14 @@ module.exports = {
       /*
          The extensions, by default are the same as the ones dependency-cruiser
          can access (run `npx depcruise --info` to see which ones that are in
-         _your_ environment. If that list is larger than what you need (e.g. 
-         it contains .js, .jsx, .ts, .tsx, .cts, .mts - but you don't use 
-         TypeScript you can pass just the extensions you actually use (e.g. 
-         [".js", ".jsx"]). This can speed up the most expensive step in 
+         _your_ environment. If that list is larger than what you need (e.g.
+         it contains .js, .jsx, .ts, .tsx, .cts, .mts - but you don't use
+         TypeScript you can pass just the extensions you actually use (e.g.
+         [".js", ".jsx"]). This can speed up the most expensive step in
          dependency cruising (module resolution) quite a bit.
        */
       // extensions: [".js", ".jsx", ".ts", ".tsx", ".d.ts"],
-      /* 
+      /*
          If your TypeScript project makes use of types specified in 'types'
          fields in package.jsons of external dependencies, specify "types"
          in addition to "main" in here, so enhanced-resolve (the resolver

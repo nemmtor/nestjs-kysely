@@ -7,7 +7,7 @@ import {
 import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { SentryInterceptor, SentryModule } from '@travelerdev/nestjs-sentry';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { ZodValidationPipe } from 'nestjs-zod';
+import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod';
 
 import { ConfigModule, ConfigService } from 'src/config';
 import { DatabaseModule } from 'src/database';
@@ -76,6 +76,7 @@ import { KillSwitchMiddleware, KillSwitchModule } from 'src/kill-switch';
       provide: APP_PIPE,
       useClass: ZodValidationPipe,
     },
+    { provide: APP_INTERCEPTOR, useClass: ZodSerializerInterceptor },
   ],
 })
 export class AppModule {

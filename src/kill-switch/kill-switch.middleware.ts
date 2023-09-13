@@ -16,7 +16,7 @@ export class KillSwitchMiddleware implements NestMiddleware {
       next();
     } else {
       throw new ServiceUnavailableException(
-        'Service is temporarily unavailable due to kill switch.',
+        'Service is temporarily unavailable.',
       );
     }
   }

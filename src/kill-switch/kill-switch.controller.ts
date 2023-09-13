@@ -1,5 +1,7 @@
 import { Controller, Get, Logger, Param } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiTags } from '@nestjs/swagger';
+
+import { AdminTokenAuth } from 'src/auth';
 
 import { KillSwitchService } from './kill-switch.service';
 import { KillSwitchParametersDto } from './dto';
@@ -12,9 +14,8 @@ export class KillSwitchController {
     private readonly killSwitchService: KillSwitchService,
   ) {}
 
-  // TODO: add swagger
-  // TODO: protect this with some secret
-  // TODO: add tests
+  @ApiBadRequestResponse({ description: 'Validation failed' })
+  @AdminTokenAuth()
   @Get(':status')
   setKillSwitch(@Param() parameters: KillSwitchParametersDto) {
     const { status } = parameters;

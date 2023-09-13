@@ -1,17 +1,29 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiConflictResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ZodSerializerDto } from 'nestjs-zod';
+
+import { ApiValidationFailedResponse } from 'src/decorators';
 
 import { AuthService } from './auth.service';
-import { RegisterDto } from './dto/register.dto';
+import { RegisterDto, RegisterResponseDto } from './dto/register.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  // TODO: add swagger error responses
+  @ApiResponse({
+    status: 201,
+    description: 'Registered successfully',
+    type: RegisterResponseDto,
+  })
+  @ApiValidationFailedResponse()
+  @ApiConflictResponse({
+    description: 'User already exists',
+  })
+  @ZodSerializerDto(RegisterResponseDto)
   @Post('register')
-  async register(@Body() registerDto: RegisterDto) {
+  register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }
 }

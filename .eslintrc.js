@@ -35,7 +35,7 @@ module.exports = {
     'unicorn/prevent-abbreviations': [
       'error',
       {
-        ignore: ['\\.e2e-spec$', /^ignore/i],
+        ignore: ['\\.e2e-spec$', '\\.e2e$', /^ignore/i],
       },
     ],
     'unicorn/prefer-top-level-await': 'off',

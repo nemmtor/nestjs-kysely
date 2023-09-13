@@ -12,7 +12,7 @@ import { logger } from './lib';
 
 patchNestJsSwagger();
 
-async function bootstrap() {
+const bootstrap = async () => {
   const app = await NestFactory.create(AppModule, {
     logger: WinstonModule.createLogger(logger),
     cors: true,
@@ -22,10 +22,9 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  app.useGlobalFilters(new DatabaseExceptionFilter());
-
   const port = configService.get('application').port;
 
+  app.useGlobalFilters(new DatabaseExceptionFilter());
   app.enableVersioning({
     defaultVersion: '1',
     type: VersioningType.URI,
@@ -36,6 +35,6 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   await app.listen(port);
-}
+};
 
 bootstrap();
