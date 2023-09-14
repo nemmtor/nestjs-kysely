@@ -10,4 +10,12 @@ export class UserService {
   create(createUserDto: CreateUserDto) {
     return this.userRepository.create(createUserDto);
   }
+
+  findByEmail(email: string) {
+    return this.userRepository.findByEmail(email, ['id', 'email', 'password']);
+  }
+
+  findById(id: string) {
+    return this.userRepository.findById(id, ['id', 'email']);
+  }
 }
