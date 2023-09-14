@@ -4,9 +4,8 @@ export type UserTable = {
   id: ColumnType<string, string, never>;
   email: string;
   password: string;
-  createdAt: ColumnType<Date, string | undefined, never>;
-  // TODO: add Postgres trigger to auto update timestamp
-  updatedAt: ColumnType<Date, string | undefined, string | undefined>;
+  createdAt: ColumnType<Date, never, never>;
+  updatedAt: ColumnType<Date, never, never>;
 };
 
 export type User = Selectable<UserTable>;

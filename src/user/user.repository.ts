@@ -14,7 +14,6 @@ export class UserRepository {
       .insertInto('user')
       .values({
         id: uuidv4(),
-        updatedAt: new Date().toISOString(),
         ...createUserDto,
       })
       .returning(['email', 'updatedAt', 'id', 'createdAt'])

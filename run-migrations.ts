@@ -12,6 +12,7 @@ import { Pool } from 'pg';
 
 config();
 
+// TODO: migrate down
 export const migrateToLatest = async () => {
   const database = new Kysely({
     dialect: new PostgresDialect({
