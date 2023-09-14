@@ -6,6 +6,8 @@ import {
 } from '@nestjs/terminus';
 import { sql } from 'kysely';
 
+import { isObject } from 'src/utils';
+
 import { Database } from './database';
 
 const STATUS_KEY = 'database';
@@ -23,7 +25,11 @@ export class DatabaseHealthIndicator extends HealthIndicator {
       const result = this.getStatus(STATUS_KEY, true);
       return result;
     } catch (error) {
-      const result = this.getStatus(STATUS_KEY, false, error);
+      const result = this.getStatus(
+        STATUS_KEY,
+        false,
+        isObject(error) ? error : undefined,
+      );
       throw new HealthCheckError('Database failed failed', result);
     }
   }

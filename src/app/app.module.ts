@@ -41,10 +41,10 @@ import { KillSwitchMiddleware, KillSwitchModule } from 'src/kill-switch';
     }),
     SentryModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (cfg: ConfigService) => {
-        const environment = cfg.get('application').environment;
+      useFactory: async (configService: ConfigService) => {
+        const environment = configService.get('application').environment;
         return {
-          dsn: cfg.get('sentry').dsn,
+          dsn: configService.get('sentry').dsn,
           debug: environment === 'local',
           environment,
           enabled: !['ci', 'test'].includes(environment),
@@ -67,7 +67,10 @@ import { KillSwitchMiddleware, KillSwitchModule } from 'src/kill-switch';
           filters: [
             {
               type: HttpException,
-              filter: (exception: HttpException) => 500 > exception.getStatus(),
+              filter: (exception) =>
+                exception instanceof HttpException
+                  ? 500 > exception.getStatus()
+                  : true,
             },
           ],
         }),

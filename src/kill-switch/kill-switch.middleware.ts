@@ -15,8 +15,8 @@ export class KillSwitchMiddleware implements NestMiddleware {
     if (this.killSwitchService.isApplicationRunning()) {
       next();
     } else {
-      throw new ServiceUnavailableException(
-        'Service is temporarily unavailable.',
+      next(
+        new ServiceUnavailableException('Service is temporarily unavailable.'),
       );
     }
   }
