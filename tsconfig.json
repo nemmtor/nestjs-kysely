@@ -1,21 +1,27 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["es2022"],
+    "target": "es2022",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": true,
-    "noImplicitAny": true,
     "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "alwaysStrict": true,
+    "noImplicitThis": true,
+    "useUnknownInCatchVariables": false
   }
 }
