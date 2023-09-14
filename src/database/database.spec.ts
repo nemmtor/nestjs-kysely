@@ -5,12 +5,19 @@ import { HealthCheckError } from '@nestjs/terminus';
 import { DatabaseHealthIndicator } from './database.health';
 import { Database } from './database';
 
+// typescript gets very slow when trying to createMock<Database>
+// this type is used to provide minimalistic mock just to satisfy test case
+// probably related to https://kysely.dev/docs/recipes/excessively-deep-types
+type DatabaseMock = {
+  executeQuery: () => void;
+};
+
 describe('database health indicator', () => {
   let service: DatabaseHealthIndicator;
-  let databaseMock: DeepMocked<Database>;
+  let databaseMock: DeepMocked<DatabaseMock>;
 
   beforeEach(async () => {
-    databaseMock = createMock<Database>();
+    databaseMock = createMock<DatabaseMock>();
 
     const moduleReference = await Test.createTestingModule({
       providers: [

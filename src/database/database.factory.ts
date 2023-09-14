@@ -1,4 +1,4 @@
-import { PostgresDialect } from 'kysely';
+import { CamelCasePlugin, PostgresDialect } from 'kysely';
 import { Pool } from 'pg';
 
 import { Database } from './database';
@@ -11,5 +11,6 @@ export const databaseFactory = (databaseConfig: DatabaseConfig) => {
 
   return new Database({
     dialect,
+    plugins: [new CamelCasePlugin()],
   });
 };
