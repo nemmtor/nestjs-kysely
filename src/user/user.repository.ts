@@ -14,10 +14,10 @@ export class UserRepository {
       .insertInto('user')
       .values({
         id: uuidv4(),
-        updated_at: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         ...createUserDto,
       })
-      .returning(['email', 'updated_at', 'id', 'created_at'])
+      .returning(['email', 'updatedAt', 'id', 'createdAt'])
       .executeTakeFirst();
   }
 }
