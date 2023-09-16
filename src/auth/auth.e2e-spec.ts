@@ -15,6 +15,7 @@ describe('Auth', () => {
   afterEach(async () => {
     await cleanUp(app);
   });
+
   describe('register', () => {
     describe('is successfull on', () => {
       it('correct payload', () => {
@@ -117,6 +118,46 @@ describe('Auth', () => {
             })
             .expect(401);
         });
+      });
+    });
+  });
+
+  describe('me', () => {
+    describe('is successfull on', () => {
+      it('correct payload', async () => {
+        await request(app.getHttpServer())
+          .post('/v1/auth/register')
+          .send({
+            email: 'john@example.com',
+            password: 'password',
+          })
+          .expect(201);
+
+        const response = await request(app.getHttpServer())
+          .post('/v1/auth/login')
+          .send({
+            email: 'john@example.com',
+            password: 'password',
+          })
+          .expect(201);
+
+        return request(app.getHttpServer())
+          .get('/v1/auth/me')
+          .set({
+            Authorization: `Bearer ${response.body.accessToken}`,
+          })
+          .expect(200);
+      });
+    });
+
+    describe('throws unauthorized error on', () => {
+      it('wrong token', () => {
+        return request(app.getHttpServer())
+          .get('/v1/auth/me')
+          .set({
+            Authorization: 'Bearer invalid',
+          })
+          .expect(401);
       });
     });
   });
