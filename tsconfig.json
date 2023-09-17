@@ -5,6 +5,7 @@
     "lib": [
       "es2022"
     ],
+    "esModuleInterop": true,
     "target": "es2022",
     "declaration": true,
     "removeComments": true,

@@ -10,6 +10,7 @@ export const configSchema = z
     NODE_ENV: z.union([z.literal('local'), z.literal('test'), z.literal('ci')]),
     PORT: portSchema,
     ADMIN_TOKEN: z.string(),
+    JWT_SECRET: z.string(),
     DB_HOST: z.string(),
     DB_PORT: portSchema,
     DB_USER: z.string(),
@@ -22,6 +23,7 @@ export const configSchema = z
       environment: environment.NODE_ENV,
       port: environment.PORT,
       adminToken: environment.ADMIN_TOKEN,
+      jwtSecret: environment.JWT_SECRET,
     },
     database: {
       host: environment.DB_HOST,

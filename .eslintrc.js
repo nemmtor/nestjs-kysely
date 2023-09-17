@@ -64,5 +64,6 @@ module.exports = {
       'error',
       { assertFunctionNames: ['expect', 'request.**.expect'] },
     ],
+    'import/named': 'off',
   },
 };

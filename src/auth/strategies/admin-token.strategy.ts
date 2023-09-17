@@ -22,11 +22,11 @@ export class AdminTokenStrategy extends PassportStrategy(
 }
 
 @Injectable()
-class _AdminTokenAuthGuard extends AuthGuard(ADMIN_TOKEN_STRATEGY) {}
+class AdminTokenAuthGuard extends AuthGuard(ADMIN_TOKEN_STRATEGY) {}
 
 export const AdminTokenAuth = () =>
   applyDecorators(
-    UseGuards(_AdminTokenAuthGuard),
+    UseGuards(AdminTokenAuthGuard),
     ApiBearerAuth(),
     ApiUnauthorizedResponse({ description: 'Unauthorized' }),
   );
