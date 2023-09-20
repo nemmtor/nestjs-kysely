@@ -10,12 +10,17 @@ import { ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 import { UserService } from 'src/user';
 
-import { RequestUserDto } from '../dto';
+import { AccessTokenDto } from '../dto';
 
-const JWT_STRATEGY = 'jwt-strategy';
+const ACCESS_TOKEN_JWT_STRATEGY = 'access-token-jwt-strategy';
+
+export const ACCESS_TOKEN_JWT_SERVICE = 'AccessTokenJwtService';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY) {
+export class AccessTokenJwtStrategy extends PassportStrategy(
+  Strategy,
+  ACCESS_TOKEN_JWT_STRATEGY,
+) {
   constructor(
     private readonly userService: UserService,
     jwtSecret: string,
@@ -27,22 +32,22 @@ export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY) {
     });
   }
 
-  async validate({ id }: { id: string }): Promise<RequestUserDto> {
-    const user = await this.userService.findById(id);
+  async validate(accessTokenDto: AccessTokenDto): Promise<AccessTokenDto> {
+    const user = await this.userService.findById(accessTokenDto.userId);
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    return { id: user.id, email: user.email };
+    return accessTokenDto;
   }
 }
 
 @Injectable()
-class JwtAuthGuard extends AuthGuard(JWT_STRATEGY) {}
+class AccessTokenJwtAuthGuard extends AuthGuard(ACCESS_TOKEN_JWT_STRATEGY) {}
 
-export const JwtAuth = () =>
+export const AccessTokenJwtAuth = () =>
   applyDecorators(
-    UseGuards(JwtAuthGuard),
+    UseGuards(AccessTokenJwtAuthGuard),
     ApiBearerAuth(),
     ApiUnauthorizedResponse({ description: 'Unauthorized' }),
   );

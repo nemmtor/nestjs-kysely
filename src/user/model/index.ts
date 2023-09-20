@@ -1,1 +1,1 @@
-export { UserTable, User } from './user.model';
+export { UserTable, User, UserColumn, UserSelectResult } from './user.model';

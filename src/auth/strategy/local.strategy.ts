@@ -11,7 +11,7 @@ import { compare } from 'bcrypt';
 
 import { UserService } from 'src/user';
 
-import { RequestUserDto } from '../dto';
+import { LocalAuthDto } from '../dto';
 
 const LOCAL_STRATEGY = 'local-strategy';
 
@@ -21,7 +21,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, LOCAL_STRATEGY) {
     super({ usernameField: 'email' });
   }
 
-  async validate(email: string, password: string): Promise<RequestUserDto> {
+  async validate(email: string, password: string): Promise<LocalAuthDto> {
     const user = await this.userService.findByEmail(email);
     if (!user) {
       throw new UnauthorizedException();
@@ -32,7 +32,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, LOCAL_STRATEGY) {
       throw new UnauthorizedException();
     }
 
-    return { id: user.id, email: user.email };
+    return { userId: user.id };
   }
 }
 

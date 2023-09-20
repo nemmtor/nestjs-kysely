@@ -161,4 +161,124 @@ describe('Auth', () => {
       });
     });
   });
+
+  describe('refresh', () => {
+    describe('is successfull on', () => {
+      it('correct payload', async () => {
+        await request(app.getHttpServer())
+          .post('/v1/auth/register')
+          .send({
+            email: 'john@example.com',
+            password: 'password',
+          })
+          .expect(201);
+
+        const response = await request(app.getHttpServer())
+          .post('/v1/auth/login')
+          .send({
+            email: 'john@example.com',
+            password: 'password',
+          })
+          .expect(201);
+
+        // so the token is not the same
+        await new Promise((r) => setTimeout(r, 2000));
+
+        return request(app.getHttpServer())
+          .post('/v1/auth/refresh')
+          .send({
+            refreshToken: response.body.refreshToken,
+          })
+          .expect(201);
+      });
+    });
+
+    describe('throws unauthorized error on', () => {
+      it('wrong token', async () => {
+        return request(app.getHttpServer())
+          .post('/v1/auth/refresh')
+          .send({
+            refreshToken: 'invalid',
+          })
+          .expect(401);
+      });
+
+      it('token reuse', async () => {
+        await request(app.getHttpServer())
+          .post('/v1/auth/register')
+          .send({
+            email: 'john@example.com',
+            password: 'password',
+          })
+          .expect(201);
+
+        const loginResponse = await request(app.getHttpServer())
+          .post('/v1/auth/login')
+          .send({
+            email: 'john@example.com',
+            password: 'password',
+          })
+          .expect(201);
+
+        // so the token is not the same
+        await new Promise((r) => setTimeout(r, 2000));
+
+        await request(app.getHttpServer())
+          .post('/v1/auth/refresh')
+          .send({
+            refreshToken: loginResponse.body.refreshToken,
+          })
+          .expect(201);
+
+        return request(app.getHttpServer())
+          .post('/v1/auth/refresh')
+          .send({
+            refreshToken: loginResponse.body.refreshToken,
+          })
+          .expect(401);
+      });
+
+      it('using fresh token after token reuse', async () => {
+        await request(app.getHttpServer())
+          .post('/v1/auth/register')
+          .send({
+            email: 'john@example.com',
+            password: 'password',
+          })
+          .expect(201);
+
+        const loginResponse = await request(app.getHttpServer())
+          .post('/v1/auth/login')
+          .send({
+            email: 'john@example.com',
+            password: 'password',
+          })
+          .expect(201);
+
+        // so the token is not the same
+        await new Promise((r) => setTimeout(r, 2000));
+
+        const refreshResponse = await request(app.getHttpServer())
+          .post('/v1/auth/refresh')
+          .send({
+            refreshToken: loginResponse.body.refreshToken,
+          })
+          .expect(201);
+
+        await request(app.getHttpServer())
+          .post('/v1/auth/refresh')
+          .send({
+            refreshToken: loginResponse.body.refreshToken,
+          })
+          .expect(401);
+
+        await request(app.getHttpServer())
+          .post('/v1/auth/refresh')
+          .send({
+            refreshToken: refreshResponse.body.refreshToken,
+          })
+          .expect(401);
+      });
+    });
+  });
 });

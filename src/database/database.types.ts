@@ -1,3 +1,4 @@
+import { TokenFamilyTable, RefreshTokenTable } from 'src/auth/model';
 import { UserTable } from 'src/user/model';
 
 export type DatabaseConfig = {
@@ -10,4 +11,6 @@ export type DatabaseConfig = {
 
 export type Tables = {
   user: UserTable;
+  tokenFamily: TokenFamilyTable;
+  refreshToken: RefreshTokenTable;
 };

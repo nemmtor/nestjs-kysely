@@ -12,8 +12,9 @@ const getAllTables = async (database: Database) => {
 
 export const truncateAllTables = async (database: Database) => {
   const allTables = await getAllTables(database);
-  // TODO: verify if this works when having more than 1 table
-  return sql`truncate table ${sql.table(allTables.join(', '))}`.execute(
-    database,
+  return Promise.all(
+    allTables.map((table) =>
+      sql`TRUNCATE TABLE ${sql.table(table)} CASCADE`.execute(database),
+    ),
   );
 };
