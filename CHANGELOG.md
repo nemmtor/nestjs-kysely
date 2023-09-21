@@ -1,5 +1,12 @@
 # nest-kysely
 
+## 0.0.5
+
+### Patch Changes
+
+- 58253f9: add tokens rotation
+- 33266cb: add login and jwt auth
+
 ## 0.0.4
 
 ### Patch Changes
