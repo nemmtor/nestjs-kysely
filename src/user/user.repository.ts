@@ -1,10 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Injectable } from '@nestjs/common';
 
-import { Database } from '../database';
+import { Database } from 'src/database';
 
 import { CreateUserDto } from './dto';
-import { UserColumn, UserSelectResult } from './model/user.model';
+import { UserSelect, UserSelectResult } from './user.types';
 
 @Injectable()
 export class UserRepository {
@@ -21,29 +21,25 @@ export class UserRepository {
       .executeTakeFirst();
   }
 
-  async findById<Columns extends UserColumn[]>(
+  findById<Columns extends UserSelect[]>(
     id: string,
     select: Columns,
   ): Promise<UserSelectResult<Columns> | undefined> {
-    const [user] = await this.database
+    return this.database
       .selectFrom('user')
       .select(select)
       .where('id', '=', id)
-      .execute();
-
-    return user;
+      .executeTakeFirst();
   }
 
-  async findByEmail<Columns extends UserColumn[]>(
+  findByEmail<Columns extends UserSelect[]>(
     email: string,
     select: Columns,
   ): Promise<UserSelectResult<Columns> | undefined> {
-    const [user] = await this.database
+    return this.database
       .selectFrom('user')
       .select(select)
       .where('email', '=', email)
-      .execute();
-
-    return user;
+      .executeTakeFirst();
   }
 }

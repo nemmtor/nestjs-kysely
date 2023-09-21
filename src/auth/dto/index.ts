@@ -1,3 +1,2 @@
 export { RegisterDto, RegisterResponseDto } from './register.dto';
-export { LoginResponseDto } from './login.dto';
-export { RequestUserDto } from './request-user.dto';
+export { PairOfTokensDto } from './pair-of-tokens.dto';

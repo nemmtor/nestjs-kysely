@@ -12,6 +12,7 @@ module.exports = {
     'plugin:unicorn/recommended',
     'plugin:jest/recommended',
     'plugin:import/recommended',
+    'plugin:typescript-sort-keys/recommended',
     'plugin:jest-formatting/recommended',
     'plugin:prettier/recommended',
   ],
@@ -65,5 +66,10 @@ module.exports = {
       { assertFunctionNames: ['expect', 'request.**.expect'] },
     ],
     'import/named': 'off',
+    'sort-keys': [
+      'error',
+      'asc',
+      { caseSensitive: true, natural: false, minKeys: 2 },
+    ],
   },
 };

@@ -1,29 +1,26 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { ApiConflictResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiConflictResponse,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ZodSerializerDto } from 'nestjs-zod';
-import { JwtService } from '@nestjs/jwt';
 
 import { ApiValidationFailedResponse, User } from 'src/decorators';
 
 import { AuthService } from './auth.service';
-import {
-  LoginResponseDto,
-  RegisterDto,
-  RegisterResponseDto,
-  RequestUserDto,
-} from './dto';
-import { JwtAuth, LocalAuth } from './strategies';
+import { PairOfTokensDto, RegisterDto, RegisterResponseDto } from './dto';
+import { RefreshTokenAuth, RefreshTokenDto } from './refresh-token';
+import { AccessTokenAuth, AccessTokenDto } from './access-token';
+import { LocalAuth, LocalAuthDto } from './local';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private jwtService: JwtService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
-  @ApiResponse({
-    status: 201,
+  @ApiCreatedResponse({
     description: 'Registered successfully',
     type: RegisterResponseDto,
   })
@@ -37,31 +34,36 @@ export class AuthController {
     return this.authService.register(registerDto);
   }
 
-  @ApiResponse({
-    status: 201,
+  @ApiCreatedResponse({
     description: 'Logged in successfully',
-    type: LoginResponseDto,
+    type: PairOfTokensDto,
   })
   @LocalAuth()
-  @ZodSerializerDto(LoginResponseDto)
+  @ZodSerializerDto(PairOfTokensDto)
   @Post('login')
-  login(@User() user: RequestUserDto) {
-    return {
-      accessToken: this.jwtService.sign(user),
-    };
+  login(@User() localAuthDto: LocalAuthDto) {
+    return this.authService.generatePairOfTokens(localAuthDto);
   }
 
-  // TODO: tests
-  @ApiResponse({
-    status: 200,
+  @ApiOkResponse({
     description: 'User data',
-    type: RequestUserDto,
+    type: AccessTokenDto,
   })
-  @JwtAuth()
-  @ZodSerializerDto(RequestUserDto)
+  @AccessTokenAuth()
+  @ZodSerializerDto(AccessTokenDto)
   @Get('me')
-  me(@User() user: RequestUserDto) {
-    console.log('user:', user);
-    return user;
+  me(@User() accessTokenDto: AccessTokenDto) {
+    return accessTokenDto;
+  }
+
+  @ApiOkResponse({
+    description: 'User data',
+    type: PairOfTokensDto,
+  })
+  @RefreshTokenAuth()
+  @ZodSerializerDto(PairOfTokensDto)
+  @Post('refresh')
+  refresh(@User() refreshTokenDto: RefreshTokenDto) {
+    return this.authService.generatePairOfTokens(refreshTokenDto);
   }
 }
