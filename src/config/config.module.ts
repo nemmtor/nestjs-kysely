@@ -5,14 +5,14 @@ import { ConfigService } from './config.service';
 import { loadEnvironment } from './config.utils';
 
 @Module({
+  controllers: [],
+  exports: [ConfigService],
   imports: [
     NestConfigModule.forRoot({
-      load: [loadEnvironment],
       cache: true,
+      load: [loadEnvironment],
     }),
   ],
-  controllers: [],
   providers: [ConfigService],
-  exports: [ConfigService],
 })
 export class ConfigModule {}

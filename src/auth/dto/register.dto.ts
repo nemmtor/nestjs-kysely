@@ -9,10 +9,10 @@ const registerSchema = z.object({
 export class RegisterDto extends createZodDto(registerSchema) {}
 
 const registerResponseSchema = z.object({
-  id: z.string().uuid(),
-  updatedAt: z.date(),
   createdAt: z.date(),
   email: z.string().email(),
+  id: z.string().uuid(),
+  updatedAt: z.date(),
 });
 
 export class RegisterResponseDto extends createZodDto(registerResponseSchema) {}

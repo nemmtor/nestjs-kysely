@@ -7,32 +7,32 @@ const portSchema = z.preprocess(
 
 export const configSchema = z
   .object({
-    NODE_ENV: z.union([z.literal('local'), z.literal('test'), z.literal('ci')]),
-    PORT: portSchema,
+    ACCESS_TOKEN_SECRET: z.string(),
     ADMIN_TOKEN: z.string(),
-    ACCESS_TOKEN_JWT_SECRET: z.string(),
-    REFRESH_TOKEN_JWT_SECRET: z.string(),
     DB_HOST: z.string(),
+    DB_NAME: z.string(),
+    DB_PASSWORD: z.string(),
     DB_PORT: portSchema,
     DB_USER: z.string(),
-    DB_PASSWORD: z.string(),
-    DB_NAME: z.string(),
+    NODE_ENV: z.union([z.literal('local'), z.literal('test'), z.literal('ci')]),
+    PORT: portSchema,
+    REFRESH_TOKEN_SECRET: z.string(),
     SENTRY_DSN: z.string(),
   })
   .transform((environment) => ({
     application: {
+      accessTokenSecret: environment.ACCESS_TOKEN_SECRET,
+      adminToken: environment.ADMIN_TOKEN,
       environment: environment.NODE_ENV,
       port: environment.PORT,
-      adminToken: environment.ADMIN_TOKEN,
-      accessTokenJwtSecret: environment.ACCESS_TOKEN_JWT_SECRET,
-      refreshTokenJwtSecret: environment.REFRESH_TOKEN_JWT_SECRET,
+      refreshTokenSecret: environment.REFRESH_TOKEN_SECRET,
     },
     database: {
       host: environment.DB_HOST,
+      name: environment.DB_NAME,
+      password: environment.DB_PASSWORD,
       port: environment.DB_PORT,
       user: environment.DB_USER,
-      password: environment.DB_PASSWORD,
-      name: environment.DB_NAME,
     },
     sentry: {
       dsn: environment.SENTRY_DSN,

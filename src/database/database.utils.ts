@@ -12,6 +12,7 @@ const getAllTables = async (database: Database) => {
 
 export const truncateAllTables = async (database: Database) => {
   const allTables = await getAllTables(database);
+  // TODO: find a way to do it in 1 call
   return Promise.all(
     allTables.map((table) =>
       sql`TRUNCATE TABLE ${sql.table(table)} CASCADE`.execute(database),

@@ -14,8 +14,8 @@ import { DatabaseHealthIndicator } from './database.health';
   providers: [
     DatabaseHealthIndicator,
     {
-      provide: Database,
       inject: [DATABASE_OPTIONS],
+      provide: Database,
       useFactory: databaseFactory,
     },
   ],

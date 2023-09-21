@@ -4,7 +4,7 @@ import { ApiBadRequestResponse, ApiTags } from '@nestjs/swagger';
 import { AdminTokenAuth } from 'src/auth';
 
 import { KillSwitchService } from './kill-switch.service';
-import { KillSwitchParametersDto } from './dto';
+import { KillSwitchParametersDto } from './kill-switch.dto';
 
 @ApiTags('killswitch')
 @Controller('killswitch')

@@ -28,11 +28,11 @@ import { KillSwitchMiddleware, KillSwitchModule } from 'src/kill-switch';
       useFactory: (configService: ConfigService) => {
         const databaseConfig = configService.get('database');
         return {
-          host: databaseConfig.host,
-          port: databaseConfig.port,
           database: databaseConfig.name,
-          user: databaseConfig.user,
+          host: databaseConfig.host,
           password: databaseConfig.password,
+          port: databaseConfig.port,
+          user: databaseConfig.user,
         };
       },
     }),
@@ -41,16 +41,16 @@ import { KillSwitchMiddleware, KillSwitchModule } from 'src/kill-switch';
     }),
     SentryModule.forRootAsync({
       imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         const environment = configService.get('application').environment;
         return {
-          dsn: configService.get('sentry').dsn,
           debug: environment === 'local',
-          environment,
+          dsn: configService.get('sentry').dsn,
           enabled: !['ci', 'test'].includes(environment),
+          environment,
         };
       },
-      inject: [ConfigService],
     }),
     ConfigModule,
   ],
@@ -66,11 +66,11 @@ import { KillSwitchMiddleware, KillSwitchModule } from 'src/kill-switch';
         new SentryInterceptor({
           filters: [
             {
-              type: HttpException,
               filter: (exception) =>
                 exception instanceof HttpException
                   ? 500 > exception.getStatus()
                   : true,
+              type: HttpException,
             },
           ],
         }),

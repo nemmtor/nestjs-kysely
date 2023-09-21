@@ -5,7 +5,7 @@ import { KillSwitchController } from './kill-switch.controller';
 
 @Module({
   controllers: [KillSwitchController],
-  providers: [KillSwitchService, Logger],
   exports: [KillSwitchService],
+  providers: [KillSwitchService, Logger],
 })
 export class KillSwitchModule {}

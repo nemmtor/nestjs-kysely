@@ -3,8 +3,8 @@ import { Injectable } from '@nestjs/common';
 
 import { Database } from 'src/database';
 
-import { CreateUserDto } from '../dto';
-import { UserColumn, UserSelectResult } from '../model';
+import { CreateUserDto } from './dto';
+import { UserSelect, UserSelectResult } from './user.types';
 
 @Injectable()
 export class UserRepository {
@@ -21,7 +21,7 @@ export class UserRepository {
       .executeTakeFirst();
   }
 
-  findById<Columns extends UserColumn[]>(
+  findById<Columns extends UserSelect[]>(
     id: string,
     select: Columns,
   ): Promise<UserSelectResult<Columns> | undefined> {
@@ -29,10 +29,10 @@ export class UserRepository {
       .selectFrom('user')
       .select(select)
       .where('id', '=', id)
-      .executeTakeFirstOrThrow();
+      .executeTakeFirst();
   }
 
-  findByEmail<Columns extends UserColumn[]>(
+  findByEmail<Columns extends UserSelect[]>(
     email: string,
     select: Columns,
   ): Promise<UserSelectResult<Columns> | undefined> {
@@ -40,6 +40,6 @@ export class UserRepository {
       .selectFrom('user')
       .select(select)
       .where('email', '=', email)
-      .executeTakeFirstOrThrow();
+      .executeTakeFirst();
   }
 }

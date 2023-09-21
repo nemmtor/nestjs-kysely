@@ -1,7 +1,7 @@
 import { VersioningType } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { AppModule } from 'src/app';
+import { AppModule } from 'src/app.module';
 import { DatabaseExceptionFilter } from 'src/database';
 
 export const setupApp = async () => {

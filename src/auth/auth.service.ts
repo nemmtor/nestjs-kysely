@@ -2,28 +2,28 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { hash } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
 import { UserService } from 'src/user';
 
-import { AccessTokenDto, RegisterDto, RefreshTokenDto } from './dto';
-import { RefreshTokenRepository, TokenFamilyRepository } from './repository';
+import { RegisterDto } from './dto';
 import {
-  ACCESS_TOKEN_JWT_SERVICE,
-  REFRESH_TOKEN_JWT_SERVICE,
-} from './strategy';
-import { CreateRefreshTokenDto } from './dto/refresh-token.dto';
+  RefreshTokenRepository,
+  CreateRefreshTokenDto,
+  REFRESH_TOKEN_SERVICE,
+  TokenFamilyRepository,
+} from './refresh-token';
+import { ACCESS_TOKEN_SERVICE, AccessTokenDto } from './access-token';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(ACCESS_TOKEN_JWT_SERVICE)
-    private readonly accessTokenJwtService: JwtService,
-    @Inject(REFRESH_TOKEN_JWT_SERVICE)
-    private readonly refreshTokenJwtService: JwtService,
+    @Inject(ACCESS_TOKEN_SERVICE)
+    private readonly accessTokenService: JwtService,
+    @Inject(REFRESH_TOKEN_SERVICE)
+    private readonly refreshTokenService: JwtService,
     private readonly userService: UserService,
     private readonly tokenFamilyRepository: TokenFamilyRepository,
     private readonly refreshTokenRepository: RefreshTokenRepository,
@@ -53,9 +53,9 @@ export class AuthService {
       tokenFamilyIdToAssign = tokenFamily.id;
     }
 
-    const refreshToken = this.refreshTokenJwtService.sign({
-      userId: refreshTokenDto.userId,
+    const refreshToken = this.refreshTokenService.sign({
       tokenFamilyId: tokenFamilyIdToAssign,
+      userId: refreshTokenDto.userId,
     });
 
     await this.refreshTokenRepository.create(
@@ -67,7 +67,7 @@ export class AuthService {
   }
 
   private createAccessToken(accessTokenDto: AccessTokenDto) {
-    return this.accessTokenJwtService.sign({
+    return this.accessTokenService.sign({
       userId: accessTokenDto.userId,
     });
   }
@@ -77,32 +77,8 @@ export class AuthService {
     const accessToken = this.createAccessToken(createRefreshTokenDto);
 
     return {
-      refreshToken,
       accessToken,
+      refreshToken,
     };
-  }
-
-  async isRefreshTokenCompromised(
-    refreshTokenDto: RefreshTokenDto,
-    refreshToken: string,
-  ) {
-    const maybeLastTokenFromDatabase =
-      await this.refreshTokenRepository.findLastByTokenFamilyId(
-        refreshTokenDto.tokenFamilyId,
-      );
-
-    if (!maybeLastTokenFromDatabase) {
-      throw new UnauthorizedException();
-    }
-
-    const isCompromised = maybeLastTokenFromDatabase.token !== refreshToken;
-
-    if (isCompromised) {
-      await this.tokenFamilyRepository.removeById(
-        refreshTokenDto.tokenFamilyId,
-      );
-    }
-
-    return isCompromised;
   }
 }

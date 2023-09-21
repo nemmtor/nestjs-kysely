@@ -5,7 +5,7 @@ import { WinstonModule } from 'nest-winston';
 import { patchNestJsSwagger } from 'nestjs-zod';
 import helmet from 'helmet';
 
-import { AppModule } from './app';
+import { AppModule } from './app.module';
 import { ConfigService } from './config';
 import { DatabaseExceptionFilter } from './database';
 import { logger } from './lib';
@@ -14,8 +14,8 @@ patchNestJsSwagger();
 
 const bootstrap = async () => {
   const app = await NestFactory.create(AppModule, {
-    logger: WinstonModule.createLogger(logger),
     cors: true,
+    logger: WinstonModule.createLogger(logger),
   });
 
   app.use(helmet());
@@ -30,7 +30,7 @@ const bootstrap = async () => {
     type: VersioningType.URI,
   });
 
-  const config = new DocumentBuilder().build();
+  const config = new DocumentBuilder().addBearerAuth().build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 

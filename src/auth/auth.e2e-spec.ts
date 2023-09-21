@@ -103,8 +103,8 @@ describe('Auth', () => {
           return request(app.getHttpServer())
             .post('/v1/auth/login')
             .send({
-              username: 'john',
               password: 'password',
+              username: 'john',
             })
             .expect(401);
         });
@@ -113,8 +113,8 @@ describe('Auth', () => {
           return request(app.getHttpServer())
             .post('/v1/auth/login')
             .send({
-              username: 'nonexisting@example.com',
               password: 'password',
+              username: 'nonexisting@example.com',
             })
             .expect(401);
         });

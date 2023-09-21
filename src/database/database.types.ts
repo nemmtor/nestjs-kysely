@@ -1,16 +1,15 @@
-import { TokenFamilyTable, RefreshTokenTable } from 'src/auth/model';
-import { UserTable } from 'src/user/model';
+import { RefreshTokenTable, TokenFamilyTable, UserTable } from './tables';
 
 export type DatabaseConfig = {
+  database: string;
   host: string;
+  password: string;
   port: number;
   user: string;
-  password: string;
-  database: string;
 };
 
 export type Tables = {
-  user: UserTable;
-  tokenFamily: TokenFamilyTable;
   refreshToken: RefreshTokenTable;
+  tokenFamily: TokenFamilyTable;
+  user: UserTable;
 };

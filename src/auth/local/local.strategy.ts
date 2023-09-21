@@ -1,19 +1,12 @@
 import { Strategy } from 'passport-local';
-import { AuthGuard, PassportStrategy } from '@nestjs/passport';
-import {
-  Injectable,
-  UnauthorizedException,
-  UseGuards,
-  applyDecorators,
-} from '@nestjs/common';
-import { ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { PassportStrategy } from '@nestjs/passport';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { compare } from 'bcrypt';
 
 import { UserService } from 'src/user';
 
-import { LocalAuthDto } from '../dto';
-
-const LOCAL_STRATEGY = 'local-strategy';
+import { LocalAuthDto } from './local-auth.dto';
+import { LOCAL_STRATEGY } from './local.constants';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, LOCAL_STRATEGY) {
@@ -23,6 +16,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, LOCAL_STRATEGY) {
 
   async validate(email: string, password: string): Promise<LocalAuthDto> {
     const user = await this.userService.findByEmail(email);
+
     if (!user) {
       throw new UnauthorizedException();
     }
@@ -35,12 +29,3 @@ export class LocalStrategy extends PassportStrategy(Strategy, LOCAL_STRATEGY) {
     return { userId: user.id };
   }
 }
-
-@Injectable()
-class LocalAuthGuard extends AuthGuard(LOCAL_STRATEGY) {}
-
-export const LocalAuth = () =>
-  applyDecorators(
-    UseGuards(LocalAuthGuard),
-    ApiUnauthorizedResponse({ description: 'Unauthorized' }),
-  );

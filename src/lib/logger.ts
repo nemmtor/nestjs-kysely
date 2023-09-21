@@ -5,11 +5,12 @@ export const logger = winston.createLogger({
   transports: [
     new winston.transports.File({
       filename: 'error.log',
-      level: 'error',
       format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.json(),
       ),
+
+      level: 'error',
     }),
     new winston.transports.Console({
       format: winston.format.combine(
