@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { sql } from 'kysely';
 
 import { Database } from 'src/database';
 
@@ -19,9 +20,11 @@ export class RefreshTokenRepository {
   findLastByTokenFamilyId(tokenFamilyId: string) {
     return this.database
       .selectFrom('refreshToken')
-      .select('token')
-      .where('tokenFamilyId', '=', tokenFamilyId)
-      .orderBy('createdAt desc')
+      .innerJoin('tokenFamily', 'tokenFamily.id', 'refreshToken.tokenFamilyId')
+      .select('refreshToken.token')
+      .where('refreshToken.tokenFamilyId', '=', tokenFamilyId)
+      .where('tokenFamily.expiresAt', '>', sql`now()`)
+      .orderBy('refreshToken.createdAt desc')
       .executeTakeFirst();
   }
 }

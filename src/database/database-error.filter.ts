@@ -23,6 +23,7 @@ const toHttpError = (error: DatabaseError) => {
 @Catch(DatabaseError)
 export class DatabaseExceptionFilter implements ExceptionFilter {
   catch(error: DatabaseError, host: ArgumentsHost) {
+    console.log('error:', error);
     const next = host.switchToHttp().getNext<NextFunction>();
     const httpError = toHttpError(error);
     next(httpError);
