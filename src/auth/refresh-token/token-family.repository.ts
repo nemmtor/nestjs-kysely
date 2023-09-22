@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Injectable } from '@nestjs/common';
+import { sql } from 'kysely';
 
 import { Database } from 'src/database';
 
@@ -22,6 +23,13 @@ export class TokenFamilyRepository {
     return this.database
       .deleteFrom('tokenFamily')
       .where('id', '=', id)
+      .execute();
+  }
+
+  removeExpired() {
+    return this.database
+      .deleteFrom('tokenFamily')
+      .where('tokenFamily.expiresAt', '<', sql`now()`)
       .execute();
   }
 }

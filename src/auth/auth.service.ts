@@ -2,9 +2,11 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { hash } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 import { UserService } from 'src/user';
 
@@ -27,7 +29,14 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly tokenFamilyRepository: TokenFamilyRepository,
     private readonly refreshTokenRepository: RefreshTokenRepository,
+    private readonly logger: Logger,
   ) {}
+
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  removeExpiredTokenFamilies() {
+    this.logger.log('Removing expired family trees');
+    this.tokenFamilyRepository.removeExpired();
+  }
 
   async register(registerDto: RegisterDto) {
     const hashedPassword = await hash(registerDto.password, 10);

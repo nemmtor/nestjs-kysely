@@ -1,3 +1,4 @@
+import { ScheduleModule } from '@nestjs/schedule';
 import {
   HttpException,
   Logger,
@@ -18,6 +19,7 @@ import { KillSwitchMiddleware, KillSwitchModule } from 'src/kill-switch';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     KillSwitchModule,
     AuthModule,
     UserModule,
