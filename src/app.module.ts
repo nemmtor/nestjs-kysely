@@ -17,6 +17,8 @@ import { UserModule } from 'src/user';
 import { AuthModule } from 'src/auth';
 import { KillSwitchMiddleware, KillSwitchModule } from 'src/kill-switch';
 
+import { LoggerInterceptor } from './lib';
+
 @Module({
   imports: [
     ScheduleModule.forRoot(),
@@ -76,6 +78,10 @@ import { KillSwitchMiddleware, KillSwitchModule } from 'src/kill-switch';
             },
           ],
         }),
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggerInterceptor,
     },
     {
       provide: APP_PIPE,
