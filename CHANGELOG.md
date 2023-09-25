@@ -1,5 +1,12 @@
 # nest-kysely
 
+## 0.0.6
+
+### Patch Changes
+
+- 63a536e: log more things
+- 6c4e3ad: add token family expiration
+
 ## 0.0.5
 
 ### Patch Changes
