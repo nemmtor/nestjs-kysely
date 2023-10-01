@@ -17,11 +17,11 @@ export const migrateToLatest = async () => {
   const database = new Kysely({
     dialect: new PostgresDialect({
       pool: new Pool({
-        host: process.env['DB_HOST'],
-        port: Number(process.env['DB_PORT']),
         database: process.env['DB_NAME'],
-        user: process.env['DB_USER'],
+        host: process.env['DB_HOST'],
         password: process.env['DB_PASSWORD'],
+        port: Number(process.env['DB_PORT']),
+        user: process.env['DB_USER'],
       }),
     }),
   });
@@ -30,13 +30,18 @@ export const migrateToLatest = async () => {
     db: database,
     provider: new FileMigrationProvider({
       fs,
-      path,
       // eslint-disable-next-line unicorn/prefer-module
       migrationFolder: path.join(__dirname, './migrations'),
+      path,
     }),
   });
 
   const { error, results } = await migrator.migrateToLatest();
+
+  if (error) {
+    console.error(error);
+    throw new Error('Failed to migrate');
+  }
 
   if (results)
     for (const result of results) {
@@ -49,11 +54,6 @@ export const migrateToLatest = async () => {
         throw new Error('Failed to migrate');
       }
     }
-
-  if (error) {
-    console.error(error);
-    throw new Error('Failed to migrate');
-  }
 
   await database.destroy();
 };
