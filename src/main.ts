@@ -5,10 +5,8 @@ import { WinstonModule } from 'nest-winston';
 import { patchNestJsSwagger } from 'nestjs-zod';
 import helmet from 'helmet';
 
+import { ConfigService, logger } from './lib';
 import { AppModule } from './app.module';
-import { ConfigService } from './config';
-import { DatabaseExceptionFilter } from './database';
-import { logger } from './lib';
 
 patchNestJsSwagger();
 
@@ -23,8 +21,6 @@ const bootstrap = async () => {
   const configService = app.get(ConfigService);
 
   const port = configService.get('application').port;
-
-  app.useGlobalFilters(new DatabaseExceptionFilter());
   app.enableVersioning({
     defaultVersion: '1',
     type: VersioningType.URI,

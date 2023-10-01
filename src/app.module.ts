@@ -1,33 +1,23 @@
-import { ScheduleModule } from '@nestjs/schedule';
-import {
-  HttpException,
-  Logger,
-  MiddlewareConsumer,
-  Module,
-} from '@nestjs/common';
+import { HttpException, Logger, Module } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { SentryInterceptor, SentryModule } from '@travelerdev/nestjs-sentry';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod';
 
-import { ConfigModule, ConfigService } from 'src/config';
-import { DatabaseModule } from 'src/database';
-import { HealthModule } from 'src/health';
 import { UserModule } from 'src/user';
-import { AuthModule } from 'src/auth';
-import { KillSwitchMiddleware, KillSwitchModule } from 'src/kill-switch';
 
-import { LoggerInterceptor } from './lib';
+import {
+  ConfigModule,
+  ConfigService,
+  DatabaseModule,
+  LoggerInterceptor,
+} from './lib';
 
 @Module({
   imports: [
-    ScheduleModule.forRoot(),
-    KillSwitchModule,
-    AuthModule,
     UserModule,
-    HealthModule,
     DatabaseModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const databaseConfig = configService.get('database');
@@ -90,11 +80,4 @@ import { LoggerInterceptor } from './lib';
     { provide: APP_INTERCEPTOR, useClass: ZodSerializerInterceptor },
   ],
 })
-export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(KillSwitchMiddleware)
-      .exclude(':version/killswitch/:status')
-      .forRoutes('*');
-  }
-}
+export class AppModule {}

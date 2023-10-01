@@ -1,2 +1,2 @@
-export { setupApp } from './setup.e2e';
-export { cleanUp } from './cleanup.e2e';
+export { setupAppForTests } from './setup.e2e';
+export { cleanUpAfterTests } from './clean-up.e2e';
