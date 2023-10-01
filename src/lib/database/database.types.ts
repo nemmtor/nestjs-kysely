@@ -5,6 +5,3 @@ export type DatabaseConfig = {
   port: number;
   user: string;
 };
-
-// export type Tables = {};
-export type Tables = unknown;

@@ -4,12 +4,18 @@ import { SentryInterceptor, SentryModule } from '@travelerdev/nestjs-sentry';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod';
 
-import { ConfigModule, ConfigService } from './config';
-import { DatabaseModule } from './database';
-import { LoggerInterceptor } from './logger';
+import { UserModule } from 'src/user';
+
+import {
+  ConfigModule,
+  ConfigService,
+  DatabaseModule,
+  LoggerInterceptor,
+} from './lib';
 
 @Module({
   imports: [
+    UserModule,
     DatabaseModule.forRootAsync({
       imports: [],
       inject: [ConfigService],

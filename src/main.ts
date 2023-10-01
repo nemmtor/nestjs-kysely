@@ -5,7 +5,8 @@ import { WinstonModule } from 'nest-winston';
 import { patchNestJsSwagger } from 'nestjs-zod';
 import helmet from 'helmet';
 
-import { AppModule, ConfigService, logger } from './lib';
+import { ConfigService, logger } from './lib';
+import { AppModule } from './app.module';
 
 patchNestJsSwagger();
 

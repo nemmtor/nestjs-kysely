@@ -1,6 +1,6 @@
 import { sql } from 'kysely';
 
-import { Database } from './database';
+import { Database } from '../lib';
 
 const getAllTables = async (database: Database) => {
   const { rows } = await sql<{ tablename: string }>`

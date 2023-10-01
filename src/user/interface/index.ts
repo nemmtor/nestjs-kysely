@@ -1,0 +1,1 @@
+export { UserHttpController } from './http';

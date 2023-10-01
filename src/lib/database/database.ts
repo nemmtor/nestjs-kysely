@@ -1,5 +1,7 @@
 import { Kysely } from 'kysely';
 
-import { Tables } from './database.types';
+import { UserTable } from 'src/user/infrastructure/entity/user.entity';
 
-export class Database extends Kysely<Tables> {}
+export class Database extends Kysely<{
+  user: UserTable;
+}> {}
